@@ -1,7 +1,7 @@
 {
+    "actorOutputSchemaVersion": 1,
     "title": "ZORG-Ω: Cadmium Scraper Results",
     "type": "object",
-    "schemaVersion": 1,
     "properties": {
         "companyName": {
             "title": "Company Name",
