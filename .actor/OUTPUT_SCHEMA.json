@@ -1,0 +1,54 @@
+{
+    "title": "ZORG-Ω: Cadmium Scraper Results",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "companyName": {
+            "title": "Company Name",
+            "type": "string",
+            "description": "The official name of the exhibiting company."
+        },
+        "phoneNumber": {
+            "title": "Phone Number",
+            "type": "string",
+            "description": "The primary contact phone number for the exhibitor."
+        },
+        "contactName": {
+            "title": "Contact Name",
+            "type": "string",
+            "description": "The name of the primary contact person or representative."
+        },
+        "contactEmail": {
+            "title": "Contact Email",
+            "type": "string",
+            "description": "The public contact email address.",
+            "format": "email"
+        },
+        "country": {
+            "title": "Country",
+            "type": "string",
+            "description": "The country where the company is based."
+        },
+        "city": {
+            "title": "City",
+            "type": "string",
+            "description": "The city where the company is based."
+        },
+        "address": {
+            "title": "Address",
+            "type": "string",
+            "description": "The full physical address or street location."
+        },
+        "booth": {
+            "title": "Booth",
+            "type": "string",
+            "description": "The assigned booth number or identifier on the floorplan."
+        },
+        "website": {
+            "title": "Website",
+            "type": "string",
+            "description": "The exhibitor's official website URL.",
+            "format": "uri"
+        }
+    }
+}

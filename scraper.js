@@ -1,6 +1,6 @@
 /**
  * Custom ZORG-Ω Scraper Engine: Conference Harvester (V5 - High Speed Concurrency)
- * * @param {Object} params - The payload containing inputs (customInput = POST payload, token = Cookie).
+ * @param {Object} params - The payload containing inputs (customInput = POST payload, token = Cookie).
  * @param {Function} emitLog - Function to log real-time telemetry strings.
  * @param {Object} runState - State object to monitor cancellation (runState.aborted).
  * @returns {Array} An array of raw exhibitor objects.
@@ -28,7 +28,6 @@ module.exports = async function scrapeCustomEvent(params, emitLog, runState) {
     const rawRecords = [];
 
     try {
-        // Step 1: Fetch all booths
         emitLog("Fetching booth layout and IDs...");
         const boothsUrl = "https://www.conferenceharvester.com/floorplan/v2/ajaxcalls/CreateBoothDivs.asp";
 
@@ -44,20 +43,17 @@ module.exports = async function scrapeCustomEvent(params, emitLog, runState) {
 
         const boothsData = boothsResponse.data.boothDivs;
         if (!boothsData || !Array.isArray(boothsData)) {
-            throw new Error("Unexpected response format. Expected 'boothDivs' array inside the response.");
+            throw new Error("Unexpected response format. Expected 'boothDivs' array.");
         }
 
         const assignedBooths = boothsData.filter(b => b.boothID && (b.boothStatus === "Unavailable" || b.boothStatus === "Rented"));
         const totalBooths = assignedBooths.length;
 
-        emitLog(`Successfully parsed response. Found ${totalBooths} rented/unavailable booths to process.`);
+        emitLog(`Successfully parsed response. Found ${totalBooths} booths to process.`);
 
-        // Step 2: Concurrent Batch Processing
-        const CONCURRENCY_LIMIT = 5; // Process 5 booths at the same time
+        const CONCURRENCY_LIMIT = 5;
 
         for (let i = 0; i < totalBooths; i += CONCURRENCY_LIMIT) {
-
-            // 🛑 CRITICAL: Check if the user aborted the scrape!
             if (runState && runState.aborted) {
                 emitLog("Extraction aborted by user gracefully. Exiting loop.");
                 break;
@@ -66,9 +62,8 @@ module.exports = async function scrapeCustomEvent(params, emitLog, runState) {
             const chunk = assignedBooths.slice(i, i + CONCURRENCY_LIMIT);
             const currentMax = Math.min(i + CONCURRENCY_LIMIT, totalBooths);
 
-            emitLog(`Fetching batch of booths ${i + 1} to ${currentMax} of ${totalBooths}...`);
+            emitLog(`Fetching batch ${i + 1} to ${currentMax} of ${totalBooths}...`);
 
-            // Create an array of promises for this chunk
             const chunkPromises = chunk.map(async (booth) => {
                 const popupUrl = `https://www.conferenceharvester.com/floorplan/v2/ajaxcalls/ExhibitorInfoPopup.asp?BoothID=${booth.boothID}&EventKey=${eventKey}`;
 
@@ -82,20 +77,21 @@ module.exports = async function scrapeCustomEvent(params, emitLog, runState) {
 
                     const $ = cheerio.load(popupResponse.data);
 
+                    // Updated keys to match OUTPUT_SCHEMA.json
                     let record = {
-                        "Company Name": "N/A",
-                        "Phone": "N/A",
-                        "Country": "N/A",
-                        "Contact Name": "N/A",
-                        "Email": "N/A",
-                        "Address": "N/A",
-                        "City": "N/A",
-                        "Booth": booth.boothNumber || "N/A",
-                        "Website": "N/A"
+                        companyName: "N/A",
+                        phoneNumber: "N/A",
+                        contactName: "N/A",
+                        contactEmail: "N/A",
+                        country: "N/A",
+                        city: "N/A",
+                        address: "N/A",
+                        booth: booth.boothNumber || "N/A",
+                        website: "N/A"
                     };
 
                     const companyName = $('h1').first().text().trim();
-                    if (companyName) record["Company Name"] = companyName;
+                    if (companyName) record.companyName = companyName;
 
                     const addressHtml = $('.ExhibitorAddress1').html();
 
@@ -109,41 +105,36 @@ module.exports = async function scrapeCustomEvent(params, emitLog, runState) {
 
                             if (line.includes('@') && line.includes('.')) {
                                 const emailMatch = line.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-                                if (emailMatch) record["Email"] = emailMatch[0];
+                                if (emailMatch) record.contactEmail = emailMatch[0];
                             } else if (line.toLowerCase().includes('http') || line.toLowerCase().includes('www.')) {
-                                record["Website"] = line;
+                                record.website = line;
                             } else if (phoneRegex.test(line)) {
-                                record["Phone"] = line;
+                                record.phoneNumber = line;
                             } else if (/[A-Z]{2}\s+\d{5}/.test(line) || line.includes(',')) {
-                                if (record["City"] === "N/A" && line !== record["Company Name"]) {
-                                    record["City"] = line;
+                                if (record.city === "N/A" && line !== record.companyName) {
+                                    record.city = line;
                                 }
                             } else {
-                                if (record["Address"] === "N/A" && line !== record["Company Name"]) {
-                                    record["Address"] = line;
+                                if (record.address === "N/A" && line !== record.companyName) {
+                                    record.address = line;
                                 }
                             }
                         });
                     }
-                    return record; // Return valid record
+                    return record;
                 } catch (err) {
                     emitLog(`Error fetching Booth ${booth.boothID}: ${err.message}. Skipping...`);
-                    return null; // Return null if this specific request failed
+                    return null;
                 }
             });
 
-            // Wait for all 5 requests in this batch to finish simultaneously
             const results = await Promise.all(chunkPromises);
 
-            // Add valid results to our main array
             results.forEach(record => {
                 if (record) rawRecords.push(record);
             });
 
-            // 🟢 Update Progress Bar
             runState?.updateProgress?.(currentMax, totalBooths);
-
-            // Wait 1 second between batches to mimic human behavior and avoid bans
             await new Promise(r => setTimeout(r, 1000));
         }
 
