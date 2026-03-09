@@ -4,6 +4,7 @@
     "schemaVersion": 1,
     "properties": {
         "helperText": {
+            "title": "ZORG Extension Tip",
             "type": "string",
             "description": "💡 TIP: Use the ZORG Chrome Extension to grab these values in one click.",
             "editor": "hidden"
@@ -12,13 +13,19 @@
             "title": "POST Payload",
             "type": "string",
             "description": "Paste the string from the 'Execute Payload Copy' button.",
-            "editor": "textarea"
+            "editor": "textarea",
+            "prefill": "EventID=...&EventKey=..."
         },
         "token": {
             "title": "Cookie Token",
             "type": "string",
             "description": "Paste the string from the 'Execute Cookie Copy' button.",
-            "editor": "textfield"
+            "editor": "textfield",
+            "prefill": "PHPSESSID=..."
         }
-    }
+    },
+    "required": [
+        "customInput",
+        "token"
+    ]
 }
