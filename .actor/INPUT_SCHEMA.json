@@ -7,13 +7,15 @@
             "title": "POST Payload",
             "type": "string",
             "description": "Paste the EventKey payload here",
-            "editor": "textarea"
+            "editor": "textarea",
+            "prefill": ""
         },
         "token": {
             "title": "Cookie Token",
             "type": "string",
             "description": "Your session cookie",
-            "editor": "textfield"
+            "editor": "textfield",
+            "prefill": ""
         }
     },
     "required": [
