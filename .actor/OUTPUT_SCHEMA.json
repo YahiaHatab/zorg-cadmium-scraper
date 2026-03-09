@@ -1,52 +1,12 @@
 {
     "actorOutputSchemaVersion": 1,
-    "title": "ZORG-Ω: Cadmium Scraper Results",
-    "type": "object",
+    "title": "Output schema of the ZORG-Ω Harvester",
     "properties": {
-        "companyName": {
-            "title": "Company Name",
-            "description": "The official name of the exhibiting company.",
-            "template": "{{value}}"
-        },
-        "phoneNumber": {
-            "title": "Phone Number",
-            "description": "The primary contact phone number.",
-            "template": "{{value}}"
-        },
-        "contactName": {
-            "title": "Contact Name",
-            "description": "The name of the primary contact person.",
-            "template": "{{value}}"
-        },
-        "contactEmail": {
-            "title": "Contact Email",
-            "description": "The public contact email address.",
-            "template": "{{value}}"
-        },
-        "country": {
-            "title": "Country",
-            "description": "The country where the company is based.",
-            "template": "{{value}}"
-        },
-        "city": {
-            "title": "City",
-            "description": "The city where the company is based.",
-            "template": "{{value}}"
-        },
-        "address": {
-            "title": "Address",
-            "description": "The full physical address.",
-            "template": "{{value}}"
-        },
-        "booth": {
-            "title": "Booth",
-            "description": "The assigned booth number.",
-            "template": "{{value}}"
-        },
-        "website": {
-            "title": "Website",
-            "description": "The exhibitor's official website URL.",
-            "template": "{{value}}"
+        "results": {
+            "type": "string",
+            "title": "Final Exhibitor Dataset",
+            "description": "The complete collection of extracted exhibitor data stored in the default dataset.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
         }
     }
 }
