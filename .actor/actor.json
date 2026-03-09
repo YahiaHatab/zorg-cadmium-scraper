@@ -4,7 +4,7 @@
     "title": "ZORG-Ω Cadmium Harvester",
     "description": "High-speed concurrent exhibitor scraper for Conference Harvester events.",
     "version": "1.0",
-    "output": "./output_schema.json",
+    "output": "./OUTPUT_SCHEMA.json",
     "dockerfile": "./Dockerfile",
     "categories": [
         "SCRAPING"
