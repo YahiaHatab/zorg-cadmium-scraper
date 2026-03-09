@@ -1,0 +1,22 @@
+{
+    "title": "ZORG Cadmium Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "customInput": {
+            "title": "POST Payload",
+            "type": "string",
+            "description": "Paste the EventKey payload here",
+            "editor": "textarea"
+        },
+        "token": {
+            "title": "Cookie Token",
+            "type": "string",
+            "description": "Your session cookie",
+            "editor": "textfield"
+        }
+    },
+    "required": [
+        "customInput"
+    ]
+}

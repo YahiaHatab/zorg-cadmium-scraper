@@ -1,0 +1,14 @@
+{
+    "name": "zorg-cadmium-scraper",
+    "version": "1.0.0",
+    "description": "ZORG-Ω Engine: Conference Harvester cloud actor.",
+    "dependencies": {
+        "apify": "^3.0.0",
+        "axios": "^1.6.0",
+        "cheerio": "^1.0.0-rc.12"
+    },
+    "main": "main.js",
+    "scripts": {
+        "start": "node main.js"
+    }
+}

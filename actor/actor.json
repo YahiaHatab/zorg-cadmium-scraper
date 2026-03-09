@@ -1,0 +1,11 @@
+{
+    "actorSpecification": 1,
+    "name": "zorg-cadmium-scraper",
+    "title": "ZORG-Ω Cadmium Harvester",
+    "description": "High-speed concurrent exhibitor scraper for Conference Harvester events.",
+    "version": "1.0",
+    "dockerfile": "./Dockerfile",
+    "categories": [
+        "SCRAPING"
+    ]
+}
