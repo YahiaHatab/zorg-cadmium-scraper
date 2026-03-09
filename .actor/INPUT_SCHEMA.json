@@ -1,24 +1,24 @@
 {
-    "title": "ZORG Cadmium Scraper",
+    "title": "ZORG-Ω Configuration",
     "type": "object",
     "schemaVersion": 1,
     "properties": {
+        "helperText": {
+            "type": "string",
+            "description": "💡 TIP: Use the ZORG Chrome Extension to grab these values in one click.",
+            "editor": "hidden"
+        },
         "customInput": {
             "title": "POST Payload",
             "type": "string",
-            "description": "Paste the EventKey payload here",
-            "editor": "textarea",
-            "prefill": ""
+            "description": "Paste the string from the 'Execute Payload Copy' button.",
+            "editor": "textarea"
         },
         "token": {
             "title": "Cookie Token",
             "type": "string",
-            "description": "Your session cookie",
-            "editor": "textfield",
-            "prefill": ""
+            "description": "Paste the string from the 'Execute Cookie Copy' button.",
+            "editor": "textfield"
         }
-    },
-    "required": [
-        "customInput"
-    ]
+    }
 }
